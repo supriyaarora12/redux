@@ -1,13 +1,12 @@
-import React from 'react';
-import Counter from './Components/Counter';
+import React from "react";
+import Counter from "./Components/Counter";
 
-const App = () => {
+function App() {
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100">
       <Counter />
     </div>
   );
-};
+}
 
 export default App;
-
