@@ -1,3 +1,4 @@
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const postSlice = createSlice({
@@ -9,13 +10,16 @@ const postSlice = createSlice({
     },
     updatePost: (state, action) => {
       const { id, text } = action.payload;
-      const existingPost = state.find((post) => post.id === id);
-      if (existingPost) {
-        existingPost.text = text;
+      const post = state.find((post) => post.id === id);
+      if (post) {
+        post.text = text;
       }
+    },
+    deletePost: (state, action) => {
+      return state.filter((post) => post.id !== action.payload);
     },
   },
 });
 
-export const { addPost, updatePost } = postSlice.actions;
+export const { addPost, updatePost, deletePost } = postSlice.actions;
 export default postSlice.reducer;
