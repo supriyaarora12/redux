@@ -1,54 +1,41 @@
-
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { deletePost, toggleLike } from "../../../features/postSlice";
-import {
-  FaThumbsUp,
-  FaRegThumbsUp,
-  FaTrash,
-  FaEdit,
-} from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { deletePost, likePost, dislikePost } from "../../../features/postSlice";
+import { FaEdit, FaTrash, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 
 function PostList({ setEditPost }) {
-  const posts = useSelector((state) => state.posts);
+  const { posts } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 
   return (
     <div className="space-y-4 mt-4">
       {posts.map((post) => (
-        <div
-          key={post.id}
-          className="bg-white shadow-md rounded p-4 flex justify-between items-center"
-        >
-          <div className="flex-1">
-            <p className="text-lg">{post.text}</p>
-          </div>
-
-          <div className="flex items-center gap-3 ml-4">
-            
-            <button
-              onClick={() => dispatch(toggleLike(post.id))}
-              className="text-blue-500 hover:text-blue-700"
-              title={post.liked ? "Unlike" : "Like"}
-            >
-              {post.liked ? <FaThumbsUp /> : <FaRegThumbsUp />}
+        <div key={post.id} className="border p-4 bg-white shadow">
+          <h2 className="text-xl font-bold">{post.title}</h2>
+          <p className="text-gray-700">{post.content}</p>
+          {post.category && <p className="text-sm text-gray-500">Category: {post.category}</p>}
+          {post.tags?.length > 0 && (
+            <div className="text-sm text-gray-600">
+              Tags:{" "}
+              {post.tags.map((tag, i) => (
+                <span key={i} className="bg-gray-200 px-2 py-1 mr-1 rounded">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
+          <div className="flex gap-4 mt-2 text-blue-600">
+            <button onClick={() => dispatch(likePost(post.id))} className="flex items-center gap-1">
+              <FaThumbsUp /> {post.likes || 0}
             </button>
-
-            <button
-              onClick={() => setEditPost(post)}
-              className="text-green-500 hover:text-green-700"
-              title="Edit"
-            >
-              <FaEdit />
+            <button onClick={() => dispatch(dislikePost(post.id))} className="flex items-center gap-1">
+              <FaThumbsDown /> {post.dislikes || 0}
             </button>
-
-           
-            <button
-              onClick={() => dispatch(deletePost(post.id))}
-              className="text-red-500 hover:text-red-700"
-              title="Delete"
-            >
-              <FaTrash />
+            <button onClick={() => setEditPost(post)} className="flex items-center gap-1 text-green-600">
+              <FaEdit /> Edit
+            </button>
+            <button onClick={() => dispatch(deletePost(post.id))} className="flex items-center gap-1 text-red-600">
+              <FaTrash /> Delete
             </button>
           </div>
         </div>

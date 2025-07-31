@@ -1,35 +1,31 @@
-
 import { createSlice } from "@reduxjs/toolkit";
 
 const postSlice = createSlice({
   name: "posts",
-  initialState: [],
+  initialState: {
+    posts: [],
+  },
   reducers: {
     addPost: (state, action) => {
-      state.push({
-        id: Date.now(),
-        text: action.payload,
-        liked: false, // Add liked status
-      });
-    },
-    updatePost: (state, action) => {
-      const { id, text } = action.payload;
-      const post = state.find((p) => p.id === id);
-      if (post) {
-        post.text = text;
-      }
+      state.posts.push({ id: Date.now(), ...action.payload });
     },
     deletePost: (state, action) => {
-      return state.filter((post) => post.id !== action.payload);
+      state.posts = state.posts.filter((post) => post.id !== action.payload);
     },
-    toggleLike: (state, action) => {
-      const post = state.find((p) => p.id === action.payload);
-      if (post) {
-        post.liked = !post.liked;
-      }
+    updatePost: (state, action) => {
+      const index = state.posts.findIndex((post) => post.id === action.payload.id);
+      if (index !== -1) state.posts[index] = action.payload;
+    },
+    likePost: (state, action) => {
+      const post = state.posts.find((post) => post.id === action.payload);
+      if (post) post.likes = (post.likes || 0) + 1;
+    },
+    dislikePost: (state, action) => {
+      const post = state.posts.find((post) => post.id === action.payload);
+      if (post) post.dislikes = (post.dislikes || 0) + 1;
     },
   },
 });
 
-export const { addPost, updatePost, deletePost, toggleLike } = postSlice.actions;
+export const { addPost, deletePost, updatePost, likePost, dislikePost } = postSlice.actions;
 export default postSlice.reducer;
